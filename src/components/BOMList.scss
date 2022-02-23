@@ -1,0 +1,36 @@
+.bom-list {
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: table;
+
+    li {
+      margin: 0;
+      display: table-row;
+
+      &.active {
+        background-color: #444400;
+      }
+
+      .reference {
+        display: table-cell;
+        font-size: 1.2rem;
+        font-weight: 100;
+        vertical-align: middle;
+      }
+
+      .details {
+        display: table-cell;
+        padding: 0.25rem 0.5rem;
+
+        div {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          width: 200px;
+        }
+      }
+    }
+  }
+}
