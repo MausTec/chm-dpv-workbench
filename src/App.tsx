@@ -266,6 +266,7 @@ const App: React.FC = () => {
         <StationFileLoader onLoad={setStationData} />
         <StationList
           stationData={stationData}
+          partsData={posData}
           onStationSelect={selectStation}
           selectedStation={selectedStation}
         />

@@ -21,9 +21,21 @@ ul.bom-list {
     font: inherit;
     color: inherit;
     text-align: left;
+    position: relative;
 
     &.active {
       background-color: #004466;
+    }
+
+    .usage {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      top: 0;
+      border-top-right-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
+      background: linear-gradient(to right, rgba(0, 68, 102, 0.1), rgba(0, 68, 102, 0.2) calc(100% - 3px), rgba(0, 68, 102, 0.5));
+      z-index: -1;
     }
 
     .reference {
