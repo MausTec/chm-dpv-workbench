@@ -60,16 +60,17 @@ const GerberFileLoader: React.FC<IGerberFileLoaderProps> = ({ onLoad }) => {
 
         Promise.allSettled(promises).then(() => {
           onLoad(out);
-        });
+          return null;
+        }).catch(console.error);
       }
     }
   };
 
   return (
-    <div className="file-select">
+    <div className="file-loader">
       <label htmlFor="gerber-file-input">
         Load Gerber
-        <input id="gerber-file-input" type="file" onChange={handleFileChange} />
+        <input id="gerber-file-input" type="file" onChange={handleFileChange} accept="application/zip" />
       </label>
     </div>
   );

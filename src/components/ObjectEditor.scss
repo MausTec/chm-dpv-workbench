@@ -1,0 +1,60 @@
+.object-editor {
+  .oe-header {
+    display: flex;
+    border-bottom: 1px solid #333333;
+    border-top: 1px solid #333333;
+    border-top: 1px solid #333333;
+    background-color: #1C1C1C;
+
+    .oe-title {
+      flex-grow: 1;
+      padding: 0.5rem;
+      font-weight: bold;
+      border-right: 1px solid #333333;
+    }
+
+    button {
+      flex-grow: 0;
+      flex-shrink: 0;
+      cursor: pointer;
+      background-color: #222222;
+      display: block;
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  .oe-table {
+    display: table;
+    width: 100%;
+
+    .oe-kvp {
+      display: table-row;
+
+      .oe-key {
+        display: table-cell;
+        padding: 0.25rem 0.5rem;
+        background-color: #161616;
+        border-right: 1px solid #222222;
+        border-bottom: 1px solid #222222;
+      }
+
+      &:last-child .oe-key {
+        border-bottom: none;
+      }
+
+      .oe-value {
+        display: table-cell;
+        border: none;
+        font: inherit;
+        padding: 0.25rem 0.5rem;
+        border-bottom: 1px solid #222222;
+        box-sizing: border-box;
+        width: 100%;
+      }
+
+      &:last-child .oe-value {
+        border-bottom: none;
+      }
+    }
+  }
+}

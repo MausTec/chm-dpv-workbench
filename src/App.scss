@@ -10,12 +10,69 @@ body {
   max-width: 100vw;
 }
 
+input, button, select, option {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  border-radius: 0;
+}
+
+input, select {
+  &:active, &:focus {
+    outline: none;
+    box-shadow: 0 0 2px 1px #0099CC;
+    position: relative;
+    z-index: 100;
+  }
+
+  &:read-only {
+    color: #999999;
+  }
+}
+
+.select-wrapper {
+  position: relative;
+
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-top: 7px solid #EEEEEE;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+}
+select {
+  &:read-only { color: #EEEEEE; } // select is always RO
+  text-align: left;
+  text-align-last: left;
+  text-align-all: left;
+  appearance: none;
+
+  option {
+    color: #EEEEEE;
+    background-color: #222222;
+    padding: 0;
+    text-align: left;
+  }
+}
+
 .left {
   width: 300px;
   border-right: 1px solid #333333;
   flex-grow: 0;
   flex-shrink: 0;
-  padding: 0.5rem;
+}
+
+.left:last-child {
+  border-right: none;
+  border-left: 1px solid #333333;
 }
 
 main {
@@ -23,6 +80,7 @@ main {
   display: flex;
   min-height: 0;
   min-width: 0;
+  flex-direction: column;
 }
 
 .pcb-view {
@@ -114,27 +172,21 @@ main {
   border: 2px solid #FF0000;
 }
 
-.left {
-  overflow: auto;
+div.file-loader {
+  flex-shrink: 0;
 }
 
-.left > div.files, .left > div.files > div {
-  display: flex;
-  flex-direction: row;
-  flex-grow: 1;
-}
-
-div.files div input {
+div.file-loader input {
   display: none;
 }
 
-div.files label {
+div.file-loader label {
   flex-grow: 1;
   display: block;
   text-align: center;
-  width: 50%;
-  border: 1px solid #333333;
+  border-bottom: 1px solid #333333;
   padding: 0.5rem;
+  background-color: #222222;
   cursor: pointer;
 }
 
@@ -142,14 +194,44 @@ tr.active {
   color: #FFFF00;
 }
 
+.left {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .left > div {
   display: flex;
-  margin-bottom: 1rem;
   flex-direction: column;
   max-width: 300px;
   overflow: auto;
   min-height: 0;
+  flex-shrink: 0;
 }
+
+.left > .controls {
+  display: flex;
+  flex-direction: row;
+}
+
+.left > .controls > button {
+  font: inherit;
+  color: inherit;
+  flex-grow: 1;
+  display: block;
+  text-align: center;
+  border: none;
+  border-top: 1px solid #333333;
+  border-right: 1px solid #333333;
+  padding: 0.5rem;
+  background-color: #222222;
+  cursor: pointer;
+}
+
+.left > .controls > button:last-child {
+  border-right: none;
+}
+
 table.scrolling {
   overflow: auto;
 }

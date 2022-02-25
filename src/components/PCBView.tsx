@@ -118,6 +118,15 @@ const PCBView: React.FC<IPCBViewProps> = ({
           Zoom
           <input type="range" min={0.5} max={4.0} step={0.1} value={scale} name="scale" id="scale" onChange={handleZoomChange} />
         </label>
+        <div style={{ float: 'right' }}>
+          { posData.filter((p) => !!p.station).length }
+          {' '}
+          of
+          {' '}
+          { posData.length }
+          {' '}
+          associated.
+        </div>
       </div>
     </div>
   );

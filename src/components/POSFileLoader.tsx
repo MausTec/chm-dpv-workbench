@@ -9,6 +9,8 @@ export interface IPOSData {
   pos_y: number;
   rotation: number;
   side: ('top' | 'bottom');
+  station?: string | null;
+  nozzle?: string | null;
 }
 
 interface ICSVInputData {
@@ -19,6 +21,8 @@ interface ICSVInputData {
   Side: ('top' | 'bottom');
   Val: string;
   Rot: string;
+  Station?: string | null;
+  Nozzle?: string | null;
 }
 
 export interface IPOSFileLoaderProps {
@@ -41,15 +45,19 @@ const POSFileLoader: React.FC<IPOSFileLoaderProps> = ({ onLoad }) => {
             });
 
             parsed.data.forEach((line) => {
-              data.push({
-                reference: line.Ref,
-                value: line.Val,
-                package: line.Package,
-                pos_x: parseFloat(line.PosX),
-                pos_y: parseFloat(line.PosY),
-                rotation: parseFloat(line.Rot),
-                side: line.Side,
-              });
+              if (line.Ref !== '') {
+                data.push({
+                  reference: line.Ref,
+                  value: line.Val,
+                  package: line.Package,
+                  pos_x: parseFloat(line.PosX),
+                  pos_y: parseFloat(line.PosY),
+                  rotation: parseFloat(line.Rot),
+                  side: line.Side,
+                  station: line.Station,
+                  nozzle: line.Nozzle,
+                });
+              }
             });
           } else {
             alert('Error parsing the CSV file?');
@@ -68,10 +76,10 @@ const POSFileLoader: React.FC<IPOSFileLoaderProps> = ({ onLoad }) => {
   };
 
   return (
-    <div>
+    <div className="file-loader">
       <label htmlFor="pos-file-input">
         Load Position CSV
-        <input id="pos-file-input" type="file" onChange={handleFileChange} />
+        <input id="pos-file-input" type="file" onChange={handleFileChange} accept="text/csv" />
       </label>
     </div>
   );

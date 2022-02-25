@@ -1,35 +1,62 @@
-.bom-list {
-  ul {
-    list-style-type: none;
+ul.bom-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+  flex-grow: 1;
+
+  button {
+    cursor: pointer;
+  }
+
+  li, button {
     margin: 0;
-    padding: 0;
-    display: table;
+    display: flex;
+    border: none;
+    width: 283px; // <- scrollbars, SUCK.
+    background: none;
+    font: inherit;
+    color: inherit;
+    text-align: left;
 
-    li {
-      margin: 0;
-      display: table-row;
+    &.active {
+      background-color: #004466;
+    }
 
-      &.active {
-        background-color: #444400;
-      }
+    .reference {
+      flex-shrink: 0;
+      width: 55px;
+      font-size: 1.2rem;
+      font-weight: 100;
+      padding: 0.25rem 0.5rem;
+      overflow: hidden;
+      height: 100%;
+      box-sizing: border-box;
 
-      .reference {
-        display: table-cell;
-        font-size: 1.2rem;
-        font-weight: 100;
+      &:before {
+        display: inline-block;
+        height: 100%;
+        content: '';
         vertical-align: middle;
       }
 
-      .details {
-        display: table-cell;
-        padding: 0.25rem 0.5rem;
+      &:last-child {
+        text-align: right;
+      }
+    }
 
-        div {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          width: 200px;
-        }
+    .details {
+      padding: 0.25rem 0;
+      flex-grow: 1;
+      min-width: 0;
+
+      div {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
