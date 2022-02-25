@@ -229,7 +229,7 @@ const App: React.FC = () => {
         />
         {selectedPartData && (
           <ObjectEditor
-            title={`Edit ${selectedPart}`}
+            title={`Edit Part ${selectedPart}`}
             obj={selectedPartData}
             hiddenFields={['station', 'reference']}
             enumFields={{ side: ['top', 'bottom'], nozzle: ['1', '2'] }}
@@ -271,7 +271,7 @@ const App: React.FC = () => {
         />
         {selectedStationData && (
           <ObjectEditor
-            title={`Edit ${selectedStation}`}
+            title={`Edit Station ${selectedStation}`}
             obj={selectedStationData}
             hiddenFields={['ID']}
             enumFields={{ Nozzle: ['1', '2'] }}

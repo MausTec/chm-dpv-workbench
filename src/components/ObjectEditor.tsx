@@ -21,6 +21,7 @@ const ObjectEditor = <T, >({
   title, obj, onChange, readOnlyFields, idField, hiddenFields, enumFields
 }: React.PropsWithChildren<IObjectEditorProps<T>>) => {
   const [dirty, setDirty] = useState<boolean>(false);
+  const [hidden, setHidden] = useState<boolean>(true);
   const [dirtyObj, setDirtyObj] = useState<T>(obj);
   const keys = Object.keys(obj) as (TKey<T>)[];
 
@@ -46,6 +47,11 @@ const ObjectEditor = <T, >({
     }
   };
 
+  const handleHideClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setHidden((h) => !h);
+  };
+
   const asVal = (val: T[TKey<T>]) : string | number => {
     let value = (val as unknown) as string | number | null | undefined;
     if (value === null || typeof value === 'undefined') { value = ''; }
@@ -55,48 +61,53 @@ const ObjectEditor = <T, >({
   return (
     <form className="object-editor" onSubmit={handleSubmit}>
       <div className="oe-header">
+        <button type="button" className={`oe-hide-toggle${hidden ? ' hidden' : ''}`} onClick={handleHideClick}>
+          <div className="arrow" />
+        </button>
         <div className="oe-title">
           { title }
           { dirty ? '*' : '' }
         </div>
         <button type="submit">Save</button>
       </div>
-      <div className="oe-table">
-        { keys.map((key) => {
-          if (hiddenFields && hiddenFields.indexOf(key) >= 0) return null;
-          const value = asVal(dirtyObj[key]);
+      <div className={`oe-table-wrapper${hidden ? ' hidden' : ''}`}>
+        <div className="oe-table">
+          { keys.map((key) => {
+            if (hiddenFields && hiddenFields.indexOf(key) >= 0) return null;
+            const value = asVal(dirtyObj[key]);
 
-          const readOnly = readOnlyFields && readOnlyFields.indexOf(key) >= 0;
-          const fieldEnums = enumFields && enumFields[key];
+            const readOnly = readOnlyFields && readOnlyFields.indexOf(key) >= 0;
+            const fieldEnums = enumFields && enumFields[key];
 
-          if (fieldEnums) {
+            if (fieldEnums) {
+              return (
+                <div className="oe-kvp" key={key}>
+                  <div className="oe-key">{humanize(key)}</div>
+                  <div className="select-wrapper">
+                    <select className="oe-value" value={value.toString()} onChange={handleChange(key)}>
+                      { fieldEnums.map(asVal).map((e) => <option key={e} value={e}>{e}</option>) }
+                    </select>
+                  </div>
+                </div>
+              );
+            }
+
+            const isNumber = typeof value === 'number';
+
             return (
               <div className="oe-kvp" key={key}>
                 <div className="oe-key">{humanize(key)}</div>
-                <div className="select-wrapper">
-                  <select className="oe-value" value={value.toString()} onChange={handleChange(key)}>
-                    { fieldEnums.map(asVal).map((e) => <option key={e} value={e}>{e}</option>) }
-                  </select>
-                </div>
+                <input
+                  className="oe-value"
+                  type={isNumber ? 'number' : 'text'}
+                  value={value.toString()}
+                  onChange={handleChange(key)}
+                  readOnly={readOnly}
+                />
               </div>
             );
-          }
-
-          const isNumber = typeof value === 'number';
-
-          return (
-            <div className="oe-kvp" key={key}>
-              <div className="oe-key">{humanize(key)}</div>
-              <input
-                className="oe-value"
-                type={isNumber ? 'number' : 'text'}
-                value={value.toString()}
-                onChange={handleChange(key)}
-                readOnly={readOnly}
-              />
-            </div>
-          );
-        })}
+          })}
+        </div>
       </div>
     </form>
   );
