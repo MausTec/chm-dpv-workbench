@@ -2,6 +2,7 @@
   "name": "chm-dpv-workbench",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://maustec.github.io/chm-dpv-workbench",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.3",
@@ -17,6 +18,7 @@
     "gerber-parser": "^4.2.4",
     "gerber-plotter": "^4.2.5",
     "gerber-to-svg": "^4.2.5",
+    "gh-pages": "^4.0.0",
     "papaparse": "^5.3.1",
     "process": "^0.11.10",
     "react": "^17.0.2",
@@ -28,6 +30,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
