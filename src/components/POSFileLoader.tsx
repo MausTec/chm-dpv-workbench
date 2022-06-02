@@ -25,9 +25,27 @@ interface ICSVInputData {
   Nozzle?: string | null;
 }
 
+interface IEasyEDAFormatData {
+  Designator: string;
+  Footprint: string;
+  'Mid X': string;
+  'Mid Y': string;
+  'Ref X': string;
+  'Ref Y': string;
+  'Pad X': string;
+  'Pad Y': string;
+  Layer: ('T' | 'B');
+  Rotation: string;
+  Comment: string;
+}
+
+type TUnknownFileType = (IEasyEDAFormatData | ICSVInputData);
+
 export interface IPOSFileLoaderProps {
   onLoad: (data: IPOSData[]) => void;
 }
+
+const isEasyEDAFormat = (data: TUnknownFileType): data is IEasyEDAFormatData => typeof (data as IEasyEDAFormatData)['Mid X'] !== 'undefined';
 
 const POSFileLoader: React.FC<IPOSFileLoaderProps> = ({ onLoad }) => {
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,12 +58,22 @@ const POSFileLoader: React.FC<IPOSFileLoaderProps> = ({ onLoad }) => {
           const data: IPOSData[] = [];
 
           if (text && typeof text === 'string') {
-            const parsed = parse<ICSVInputData>(text, {
+            const parsed = parse<TUnknownFileType>(text, {
               header: true,
             });
 
             parsed.data.forEach((line) => {
-              if (line.Ref !== '') {
+              if (isEasyEDAFormat(line)) {
+                data.push({
+                  reference: line.Designator,
+                  value: line.Comment,
+                  package: line.Footprint,
+                  pos_x: parseFloat(line['Mid X']),
+                  pos_y: parseFloat(line['Mid Y']),
+                  side: line.Layer === 'T' ? 'top' : 'bottom',
+                  rotation: parseFloat(line.Rotation),
+                });
+              } else if (line.Ref !== '') {
                 data.push({
                   reference: line.Ref,
                   value: line.Val,

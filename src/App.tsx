@@ -45,6 +45,7 @@ const App: React.FC = () => {
   const [selectedPart, selectPart] = useState<string | null>(null);
   const [selectedStation, selectStation] = useState<string | null>(null);
   const [filterUnassignedFootprints, setFilterUnassignedFootprints] = useState<boolean>(false);
+  const [filterPartSide, setFilterPartSide] = useState<'top' | 'bottom' | 'all'>('top');
 
   const getPart = (reference: string | null | undefined): IPOSData | undefined => (
     posData.find((p) => p.reference === reference)
@@ -112,8 +113,13 @@ const App: React.FC = () => {
   }, [selectedPartData]);
 
   let bomListEntries = posData.filter((b) => b.reference);
+
   if (filterUnassignedFootprints) {
     bomListEntries = bomListEntries.filter((b) => !b.station || b.station === '0');
+  }
+
+  if (filterPartSide !== 'all') {
+    bomListEntries = bomListEntries.filter((b) => b.side === filterPartSide);
   }
 
   const selectNextPart = () => {

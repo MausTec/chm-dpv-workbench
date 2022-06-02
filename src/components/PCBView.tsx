@@ -14,10 +14,11 @@ const PCBView: React.FC<IPCBViewProps> = ({
 }) => {
   const [scale, setScale] = useState<number>(2);
   const [pan, setPan] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
+  const [side, setSide] = useState<'top' | 'bottom'>('top');
 
   const maxX = posData.map((d) => d.pos_x).filter(Boolean).reduce((p, v) => (p > v ? p : v), 0);
   const maxY = posData.map((d) => d.pos_y).filter(Boolean).reduce((p, v) => (p > v ? p : v), 0);
-  const outline = gerberData.filter((d) => d.filename.match(/\.gm1$/))[0];
+  const outline = gerberData.filter((d) => d.filename.match(/\.(gm1|gko)$/i))[0];
   const pcbHeight = (outline && outline.height) || maxY;
   const pcbWidth = (outline && outline.width) || maxX;
   const offsetX = Math.abs((outline && outline.viewBox[0]) / 1000 || 0);
@@ -53,6 +54,16 @@ const PCBView: React.FC<IPCBViewProps> = ({
     return size * 25.4;
   };
 
+  const filteredGerberData = gerberData.filter((gerb) => {
+    const match = gerb.filename.match(/\.g([t|b])./i);
+    if (match) {
+      return match[1].toLowerCase() === side[0];
+    }
+    return true;
+  });
+
+  const filteredPosData = posData.filter((pos) => pos.side === side);
+
   return (
     <div className="pcb-view">
       {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
@@ -70,11 +81,11 @@ const PCBView: React.FC<IPCBViewProps> = ({
             backgroundColor: '#003300',
           }}
         >
-          { gerberData.map((data) => (
+          { filteredGerberData.map((data) => (
             <div
               dangerouslySetInnerHTML={{ __html: data.svg }}
               key={data.filename}
-              className={data.filename.split('.').join(' ')}
+              className={data.filename.toLowerCase().split('.').join(' ')}
               style={{
                 position: 'absolute',
                 bottom: `${(mm(data.viewBox[1] / 1000, data.units) + offsetY) * scale}mm`,
@@ -85,7 +96,7 @@ const PCBView: React.FC<IPCBViewProps> = ({
               data-gerber-filename={data.filename}
             />
           ))}
-          { posData.filter((d) => d.reference).map((part) => (
+          { filteredPosData.filter((d) => d.reference).map((part) => (
             <button
               type="button"
               key={part.reference}

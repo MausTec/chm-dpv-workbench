@@ -19,6 +19,7 @@ const GerberFileLoader: React.FC<IGerberFileLoaderProps> = ({ onLoad }) => {
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const file = e.target.files[0];
+      console.log('Loading gerber file: ', file);
 
       if (file) {
         const reader = new Zip.BlobReader(file);
@@ -27,7 +28,7 @@ const GerberFileLoader: React.FC<IGerberFileLoaderProps> = ({ onLoad }) => {
 
         const entries = await zip.getEntries();
         const promises = entries.map(async (f) => {
-          if (f.getData && f.filename.match(/(gbr|gt.|gm1|drl)$/)) {
+          if (f.getData && f.filename.match(/(gbr|g[tb].|gm1|drl|gko)$/i)) {
             const writer = new Zip.Uint8ArrayWriter();
             const data = await f.getData(writer);
 
@@ -40,7 +41,7 @@ const GerberFileLoader: React.FC<IGerberFileLoaderProps> = ({ onLoad }) => {
               converter.on('warning', (error) => console.warn(f.filename, error));
               converter.on('data', (d) => {
                 const gerb: IGerberData = {
-                  filename: f.filename,
+                  filename: f.filename.toLowerCase(),
                   svg: d,
                   viewBox: converter.viewBox,
                   width: converter.width,
@@ -58,10 +59,15 @@ const GerberFileLoader: React.FC<IGerberFileLoaderProps> = ({ onLoad }) => {
           return null;
         });
 
-        Promise.allSettled(promises).then(() => {
-          onLoad(out);
-          return null;
-        }).catch(console.error);
+        Promise.allSettled(promises)
+          .then(() => {
+            onLoad(out);
+            return null;
+          })
+          .finally(() => {
+            e.target.value = '';
+          })
+          .catch(console.error);
       }
     }
   };
